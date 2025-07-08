@@ -3,39 +3,32 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 from pyrogram.errors import ChatAdminRequired, UserNotParticipant, ChatWriteForbidden
 from VILLAIN_MUSIC import app
 
-#--------------------------
+MUST_JOIN = -1002710057429  # Private channel ID
+JOIN_LINK_1 = "https://t.me/+f9CCUJiRK6E1YzJh"
+JOIN_LINK_2 = "https://t.me/+6lt8_5E86UcyNGYx"
 
-MUST_JOIN = "INSTAGRAM_VlRAL_MMS"
-#------------------------
-@app.on_message(filters.incoming & filters.private, group=-1)
-async def must_join_channel(app: Client, msg: Message):
-    if not MUST_JOIN:
-        return
+@app.on_message(filters.private & filters.incoming, group=-1)
+async def must_join_channel(client: Client, message: Message):
     try:
         try:
-            await app.get_chat_member(MUST_JOIN, msg.from_user.id)
+            await client.get_chat_member(MUST_JOIN, message.from_user.id)
+            # ✅ User is in the channel, do nothing
         except UserNotParticipant:
-            if MUST_JOIN.isalpha():
-                link = "https://t.me/INSTAGRAM_VlRAL_MMS" + MUST_JOIN
-            else:
-                chat_info = await app.get_chat(MUST_JOIN)
-                link = chat_info.invite_link
-            try:
-                await msg.reply_photo(
-                    photo="https://files.catbox.moe/bm6nx8.jpg", caption=f"๏ ᴀᴄᴄᴏʀᴅɪɴɢ ᴛᴏ ᴍʏ ᴅᴀᴛᴀʙᴀsᴇ ʏᴏᴜ'ᴠᴇ ɴᴏᴛ ᴊᴏɪɴᴇᴅ [๏sᴜᴘᴘᴏʀᴛ๏]({link}) ʏᴇᴛ, ɪғ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴜsᴇ ᴍᴇ ᴛʜᴇɴ ᴊᴏɪɴ [๏sᴜᴘᴘᴏʀᴛ๏]({link}) ᴀɴᴅ sᴛᴀʀᴛ ᴍᴇ ᴀɢᴀɪɴ ! ",
-                    reply_markup=InlineKeyboardMarkup(
-                        [
-                            [
-                                InlineKeyboardButton("• ᴊᴏɪɴ •", url="https://t.me/INSTAGRAM_VlRAL_MMS"),
-                            ],
-                            [
-                                InlineKeyboardButton("• ᴊᴏɪɴ •", url="https://t.me/+HzFGi8TF6hk3Mjhl"),
-                            ]
-                        ]
-                    )
-                )
-                await msg.stop_propagation()
-            except ChatWriteForbidden:
-                pass
+            # ❌ User not in channel, show join message
+            await message.reply_photo(
+                photo="https://files.catbox.moe/bm6nx8.jpg",
+                caption=(
+                    "❌ ʏᴏᴜ ʜᴀᴠᴇɴ'ᴛ ᴊᴏɪɴᴇᴅ ᴏᴜʀ ᴄʜᴀɴɴᴇʟ ʏᴇᴛ!\n\n"
+                    f"📢 [ᴊᴏɪɴ ᴛʜᴇ ᴄʜᴀɴɴᴇʟ ʜᴇʀᴇ]({JOIN_LINK_1}) & [ᴇxᴛʀᴀ ᴄʜᴀɴɴᴇʟ]({JOIN_LINK_2})\n\n"
+                    "ᴛʜᴇɴ sᴇɴᴅ /start ᴀɢᴀɪɴ ✅"
+                ),
+                reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton("• ᴊᴏɪɴ 1 •", url=JOIN_LINK_1)],
+                    [InlineKeyboardButton("• ᴊᴏɪɴ 2 •", url=JOIN_LINK_2)]
+                ])
+            )
+            await message.stop_propagation()
     except ChatAdminRequired:
-        print(f"๏ ᴘʀᴏᴍᴏᴛᴇ ᴍᴇ ᴀs ᴀɴ ᴀᴅᴍɪɴ ɪɴ ᴛʜᴇ ᴍᴜsᴛ_ᴊᴏɪɴ ᴄʜᴀᴛ ๏: {MUST_JOIN} !")
+        print(f"⚠️ Bot needs admin rights in channel ID: {MUST_JOIN}")
+    except ChatWriteForbidden:
+        pass
