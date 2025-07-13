@@ -34,7 +34,7 @@ def private_panel(_):
             ),
             InlineKeyboardButton(
                 text=_["S_B_7"],  # Same text label
-                url="https://t.me/OWNR_XD"  # Replaced callback_data with URL
+                url="https://t.me/iArshOp"  # Replaced callback_data with URL
             ),
             InlineKeyboardButton(
                 text=_["S_B_6"], 
